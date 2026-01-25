@@ -46,6 +46,11 @@ docker-compose up --build
 - **Админка Django:** [http://localhost:8000/admin](http://localhost:8000/admin)
 
 ### 4. Создание суперпользователя (для входа в админку)
+Пере созданием суперпользователя, необходимо выполнить миграции:
+```bash
+docker-compose exec backend python manage.py migrate
+```
+
 В новом окне терминала выполните команду:
 
 ```bash
