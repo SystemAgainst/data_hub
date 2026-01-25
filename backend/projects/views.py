@@ -2,6 +2,7 @@ from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from .models import Project
+from .permissions import IsProjectParticipantOrAdmin
 from .serializers import ProjectSerializer
 
 
@@ -12,5 +13,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
-    # Разрешаем читать всем (даже анонимам пока), а менять - только авторизованным
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    # Опционально: Можно переопределить get_serializer_class,
+    # чтобы Гостям отдавать "урезанный" JSON (без цены и ссылок),
+    # а Своим - полный. Это best practice для безопасности.
+    permission_classes = [IsProjectParticipantOrAdmin]
