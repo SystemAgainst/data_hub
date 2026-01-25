@@ -1,12 +1,22 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
+import CenterLayout from '@/layouts/CenterLayout.vue'
+import ProjectsLayout from '@/layouts/ProjectsLayout.vue'
+
+const route = useRoute()
+const layout = computed(() => {
+  const layoutName = route.meta.layout || 'center'
+
+  if (layoutName === 'projects') return ProjectsLayout
+  return CenterLayout
+})
+</script>
 
 <template>
-  <h1 class="text-3xl font-bold underline">Hello world!</h1>
-  <h2>You did it!</h2>
-  <p>
-    Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
-    documentation
-  </p>
+  <component :is="layout">
+    <RouterView />
+  </component>
 </template>
 
 <style scoped></style>
