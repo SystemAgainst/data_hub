@@ -18,7 +18,7 @@ const removeToken = () => localStorage.removeItem(tokenName)
 instance.interceptors.request.use((requestConfig) => {
   const token = getToken()
   if (token) {
-    requestConfig.headers.Authorization = `Bearer ${token}`
+    requestConfig.headers.Authorization = `Token ${token}`
   }
 
   return requestConfig

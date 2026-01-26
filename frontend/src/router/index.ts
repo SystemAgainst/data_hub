@@ -33,7 +33,7 @@ router.beforeEach((to, from, next) => {
   // 1. Если страница требует авторизации, а мы не вошли
   if (to.meta.requiresAuth && !isAuthenticated) {
     // Редиректим на логин, но запоминаем, куда хотели попасть
-    next({ name: 'login', query: { redirect: to.fullPath } })
+    next({ name: 'auth', query: { redirect: to.fullPath } })
     return
   }
 
