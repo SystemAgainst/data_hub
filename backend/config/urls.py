@@ -19,7 +19,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
-from projects.views import ProjectViewSet
+from projects.views import CustomAuthToken, ProjectViewSet
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
@@ -28,6 +28,8 @@ router.register(r"projects", ProjectViewSet)
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/v1/", include(router.urls)),
+    # Эндпоинт для входа (отдаем логин/пароль -> получаем токен)
+    path("api/v1/auth/", CustomAuthToken.as_view()),
 ]
 
 if settings.DEBUG:

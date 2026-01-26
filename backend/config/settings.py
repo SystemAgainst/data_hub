@@ -28,6 +28,17 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
+CORS_ALLOW_ALL_ORIGINS = True
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+]
 
 # Application definition
 
@@ -40,6 +51,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # Сторонние библиотеки
     "rest_framework",
+    "rest_framework.authtoken",
     "corsheaders",
     # Ваши приложения
     "projects",

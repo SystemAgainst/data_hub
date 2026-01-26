@@ -1,9 +1,40 @@
 from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.authtoken.models import Token
+
+# Добавьте эти импорты для логина:
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.response import Response
 
 from .models import Project
 from .permissions import IsProjectParticipantOrAdmin
 from .serializers import ProjectSerializer
+
+
+class CustomAuthToken(ObtainAuthToken):
+    """
+    Кастомная вьюха для логина.
+    Отключает authentication_classes, чтобы игнорировать
+    Cookie сессии (если админ залогинен в браузере) и не требовать CSRF.
+    """
+
+    authentication_classes = []
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(
+            data=request.data, context={"request": request}
+        )
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data["user"]
+        token, created = Token.objects.get_or_create(user=user)
+
+        return Response(
+            {
+                "token": token.key,
+                # Можно вернуть еще ID или имя, если нужно на фронте
+                "user_id": user.pk,
+                "username": user.username,
+            }
+        )
 
 
 class ProjectViewSet(viewsets.ModelViewSet):
