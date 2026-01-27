@@ -38,3 +38,12 @@ export interface UserMini {
   first_name?: string
   last_name?: string
 }
+
+export interface ProjectStats {
+  total_spent: string
+  total_days: string
+  participants: {
+    name: string
+    amount: string
+  }[]
+}

@@ -3,3 +3,5 @@ djangorestframework
 psycopg2-binary
 django-cors-headers
 Pillow
+gspread==6.0.2
+oauth2client==4.1.3

@@ -1,5 +1,5 @@
 import api from './http'
-import type { Project } from '@/types'
+import type { Project, ProjectStats } from '@/types'
 
 export const getProjects = () => api.get<Project[]>('projects/')
 
@@ -14,3 +14,6 @@ export const updateProject = (id: number, data: Partial<Project>) =>
   api.patch<Project>(`projects/${id}/`, data)
 
 export const deleteProject = (id: number) => api.del(`projects/${id}/`)
+
+export const getProjectStats = (id: number | string) =>
+  api.get<ProjectStats>(`projects/${id}/stats/`)

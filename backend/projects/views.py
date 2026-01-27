@@ -3,11 +3,13 @@ from rest_framework.authtoken.models import Token
 
 # Добавьте эти импорты для логина:
 from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from .models import Project
 from .permissions import IsProjectParticipantOrAdmin
 from .serializers import ProjectSerializer
+from .services import get_sheet_stats
 
 
 class CustomAuthToken(ObtainAuthToken):
@@ -48,3 +50,15 @@ class ProjectViewSet(viewsets.ModelViewSet):
     # чтобы Гостям отдавать "урезанный" JSON (без цены и ссылок),
     # а Своим - полный. Это best practice для безопасности.
     permission_classes = [IsProjectParticipantOrAdmin]
+
+    @action(detail=True, methods=["get"])
+    def stats(self, request, pk=None):
+        project = self.get_object()
+        if not project.google_sheet_url:
+            return Response({"error": "No Google Sheet linked"}, status=400)
+
+        data = get_sheet_stats(project.google_sheet_url)
+        if not data:
+            return Response({"error": "Failed to fetch data"}, status=502)
+
+        return Response(data)
