@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User  # Импортируем модель пользователя
+from django.contrib.auth.models import User
 from django.db import models
 
 
@@ -6,6 +6,7 @@ class Project(models.Model):
     # Основная информация
     title = models.CharField(max_length=200, verbose_name="Название проекта")
     description = models.TextField(blank=True, verbose_name="Описание")
+    address = models.TextField(blank=True, verbose_name="Адрес")
     cover_image = models.ImageField(
         upload_to="project_covers/", blank=True, null=True, verbose_name="Фото обложки"
     )
@@ -24,7 +25,7 @@ class Project(models.Model):
     )
     # Документы можно хранить отдельной моделью, но для простоты пока оставим текстовое поле или файлы позже.
     # Сейчас сделаем поле для заметок, как в ТЗ
-    notes = models.TextField(blank=True, verbose_name="Заметки")
+    documents = models.TextField(blank=True, verbose_name="Документы")
 
     # Служебные поля
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Создано")

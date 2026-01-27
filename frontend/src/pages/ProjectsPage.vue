@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { useProjectsStore } from '@/stores/projects'
 import ProjectCard from '@/components/projects/ProjectCard.vue'
+
+const router = useRouter()
 
 const projectsStore = useProjectsStore()
 const searchQuery = ref('')
@@ -20,19 +23,19 @@ const filteredProjects = computed(() => {
 })
 
 const openProject = (id: number) => {
-  console.log('Открыть:', id)
+  router.push({ name: 'project-detail', params: { id } })
 }
 </script>
 
 <template>
-  <div class="flex flex-col h-full space-y-4">
+  <div class="flex h-full flex-col space-y-4">
     <!-- Шапка страницы -->
     <div class="flex items-center justify-between pb-2">
       <div>
-        <nav class="text-xs text-dark-muted mb-1 flex items-center gap-1">
+        <nav class="text-dark-muted mb-1 flex items-center gap-1 text-xs">
           <span
             @click="$router.push('/')"
-            class="cursor-pointer hover:text-primary transition-colors"
+            class="hover:text-primary cursor-pointer transition-colors"
             >Главная</span
           >
           <span>/</span>
@@ -43,7 +46,7 @@ const openProject = (id: number) => {
 
       <button
         @click="$router.push('/')"
-        class="w-10 h-10 flex items-center justify-center rounded-full bg-dark-surface border border-white/10 active:scale-95 transition-all hover:bg-white/10"
+        class="bg-dark-surface flex h-10 w-10 items-center justify-center rounded-full border border-white/10 transition-all hover:bg-white/10 active:scale-95"
       >
         ✕
       </button>
@@ -55,15 +58,15 @@ const openProject = (id: number) => {
         v-model="searchQuery"
         type="text"
         placeholder="Поиск по названию..."
-        class="w-full bg-dark-surface border border-white/10 rounded-xl py-3 pl-10 pr-4 text-dark-text focus:outline-none focus:border-primary/50 transition-colors shadow-sm"
+        class="bg-dark-surface text-dark-text focus:border-primary/50 w-full rounded-xl border border-white/10 py-3 pr-4 pl-10 shadow-sm transition-colors focus:outline-none"
       />
-      <span class="absolute left-3 top-3.5 text-dark-muted">🔍</span>
+      <span class="text-dark-muted absolute top-3.5 left-3">🔍</span>
     </div>
 
     <!-- БЛОК КОНТЕНТА -->
 
     <!-- 1. Загрузка -->
-    <div v-if="projectsStore.isLoading" class="py-10 text-center text-primary animate-pulse">
+    <div v-if="projectsStore.isLoading" class="text-primary animate-pulse py-10 text-center">
       Загрузка данных...
     </div>
 
@@ -72,7 +75,7 @@ const openProject = (id: number) => {
       {{ projectsStore.error }}
       <button
         @click="projectsStore.fetchProjects()"
-        class="block mx-auto mt-2 text-sm underline text-dark-muted cursor-pointer"
+        class="text-dark-muted mx-auto mt-2 block cursor-pointer text-sm underline"
       >
         Попробовать снова
       </button>
@@ -83,7 +86,7 @@ const openProject = (id: number) => {
       <!-- Обертка для условия v-else -->
 
       <!-- Сами карточки -->
-      <div v-if="filteredProjects.length > 0" class="grid gap-4 sm:grid-cols-2 pb-10">
+      <div v-if="filteredProjects.length > 0" class="grid gap-4 pb-10 sm:grid-cols-2">
         <ProjectCard
           v-for="project in filteredProjects"
           :key="project.id"
@@ -93,12 +96,13 @@ const openProject = (id: number) => {
           :updated-at="project.updated_at"
           :total-cost="project.total_cost"
           @click="openProject(project.id)"
+          class="hover:border-primary cursor-pointer transition-all"
         />
       </div>
 
       <!-- Пустое состояние (Ничего не нашли) -->
-      <div v-else class="text-center py-20 text-dark-muted">
-        <div class="text-4xl mb-2">🤔</div>
+      <div v-else class="text-dark-muted py-20 text-center">
+        <div class="mb-2 text-4xl">🤔</div>
         <p>Ничего не найдено</p>
       </div>
     </div>

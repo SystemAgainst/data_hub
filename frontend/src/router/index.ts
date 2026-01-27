@@ -23,6 +23,12 @@ const router = createRouter({
       component: () => import('@/pages/ProjectsPage.vue'),
       meta: { layout: 'projects', requiresAuth: true },
     },
+    {
+      path: '/projects/:id',
+      name: 'project-detail',
+      component: () => import('@/pages/ProjectDetailPage.vue'),
+      meta: { layout: 'projects', requiresAuth: true },
+    },
   ],
 })
 

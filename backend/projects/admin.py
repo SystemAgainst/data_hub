@@ -5,6 +5,7 @@ from .models import Project
 
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
+    filter_horizontal = ("participants",)
     list_display = ("title", "total_cost", "updated_at", "updated_by")
     list_filter = ("updated_at", "participants")
     search_fields = ("title", "description")
