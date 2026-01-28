@@ -95,6 +95,7 @@ const openProject = (id: number) => {
           :cover-url="project.cover_image"
           :updated-at="project.updated_at"
           :total-cost="project.total_cost"
+          :updated_by_name="project.updated_by_name"
           @click="openProject(project.id)"
           class="hover:border-primary cursor-pointer transition-all"
         />

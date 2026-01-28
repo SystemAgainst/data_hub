@@ -18,22 +18,6 @@ defineProps<{
           {{ project.description || 'Описание отсутствует' }}
         </p>
       </div>
-
-      <!-- Мета-данные -->
-      <div class="space-y-4">
-        <div>
-          <span class="text-dark-muted mb-1 block text-xs">Сроки проведения</span>
-          <div class="text-white">
-            {{ project.created_at ? new Date(project.created_at).toLocaleDateString() : '?' }}
-            <!-- (или используйте start_date/end_date если они есть в типе) -->
-          </div>
-        </div>
-
-        <div v-if="project.total_cost">
-          <span class="text-dark-muted mb-1 block text-xs">Бюджет</span>
-          <div class="text-primary font-mono text-lg">{{ project.total_cost }} ₽</div>
-        </div>
-      </div>
     </div>
   </div>
 </template>

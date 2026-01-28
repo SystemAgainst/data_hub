@@ -15,6 +15,7 @@ class Project(models.Model):
     google_sheet_url = models.URLField(
         blank=True, verbose_name="Ссылка на Google Таблицу"
     )
+    document_url = models.URLField(blank=True, verbose_name="Ссылка на Документы")
     total_cost = models.DecimalField(
         max_digits=12, decimal_places=2, default=0, verbose_name="Общая стоимость (₽)"
     )
@@ -23,9 +24,6 @@ class Project(models.Model):
     participants = models.ManyToManyField(
         User, related_name="projects", blank=True, verbose_name="Участники проекта"
     )
-    # Документы можно хранить отдельной моделью, но для простоты пока оставим текстовое поле или файлы позже.
-    # Сейчас сделаем поле для заметок, как в ТЗ
-    documents = models.TextField(blank=True, verbose_name="Документы")
 
     # Служебные поля
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Создано")

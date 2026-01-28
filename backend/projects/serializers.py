@@ -24,7 +24,7 @@ class ProjectSerializer(serializers.ModelSerializer):
             "title",
             "description",
             "address",
-            "documents",
+            "document_url",
             "cover_image",
             "google_sheet_url",
             "total_cost",

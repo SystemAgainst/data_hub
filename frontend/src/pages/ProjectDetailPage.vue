@@ -2,14 +2,11 @@
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { getProjectById, getProjectStats } from '@/api/projects'
-// ВАЖНО: Добавьте тип ProjectStats, если он экспортирован, иначе any
 import type { Project, ProjectStats } from '@/types'
-
 import ProjectHeader from '@/components/projects/detail/ProjectHeader.vue'
 import ProjectInfoCard from '@/components/projects/detail/ProjectInfoCard.vue'
 import ProjectTeamWidget from '@/components/projects/detail/ProjectTeamWidget.vue'
 import ProjectDocumentsWidget from '@/components/projects/detail/ProjectDocumentsWidget.vue'
-// 1. ИМПОРТИРУЕМ НОВЫЙ ВИДЖЕТ
 import ProjectGoogleStatsWidget from '@/components/projects/detail/ProjectGoogleStatsWidget.vue'
 
 const route = useRoute()
@@ -20,7 +17,6 @@ const project = ref<Project | null>(null)
 const isLoading = ref(true)
 const error = ref('')
 
-// 2. ОБЪЯВЛЯЕМ СОСТОЯНИЕ ДЛЯ СТАТИСТИКИ
 const stats = ref<ProjectStats | null>(null)
 const isStatsLoading = ref(false)
 
@@ -69,12 +65,11 @@ onMounted(init)
     <!-- Навигация (всегда видна) -->
     <button
       @click="router.back()"
-      class="text-dark-muted mb-6 flex items-center gap-2 transition-colors hover:text-white"
+      class="text-dark-muted mb-6 flex cursor-pointer items-center gap-2 transition-colors hover:text-white"
     >
       ← Назад к списку
     </button>
 
-    <!-- 1. Состояние ЗАГРУЗКИ -->
     <div v-if="isLoading" class="text-dark-muted animate-pulse py-12 text-center">Загрузка...</div>
 
     <!-- 2. Состояние ОШИБКИ -->
@@ -91,18 +86,18 @@ onMounted(init)
       <ProjectInfoCard :project="project" />
 
       <div class="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2">
+        <!-- Участники -->
+        <ProjectTeamWidget :participants="project.participants_details" />
+
+        <!-- Документы -->
+        <ProjectDocumentsWidget :has-documents="!!project.document_url" />
+
         <!-- Виджет статистики -->
         <ProjectGoogleStatsWidget
           :stats="stats"
           :is-loading="isStatsLoading"
           :sheet-url="project.google_sheet_url"
         />
-
-        <!-- Документы -->
-        <ProjectDocumentsWidget :has-documents="!!project.documents" />
-
-        <!-- Участники -->
-        <ProjectTeamWidget :participants="project.participants_details" />
       </div>
     </div>
   </div>

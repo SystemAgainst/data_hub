@@ -1,15 +1,14 @@
 <script setup lang="ts">
-// Описываем, какие данные принимает карточка
 defineProps<{
   id: number
   title: string
-  coverUrl?: string | null // Картинка может быть null
+  coverUrl?: string | null
   updatedAt: string
-  totalCost?: string | number // Пока опционально
-  participantsCount?: number // Сколько людей в проекте
+  totalCost?: string | number
+  participantsCount?: number
+  updated_by_name?: string
 }>()
 
-// Форматирование даты
 const formatDate = (dateString: string) => {
   return new Date(dateString).toLocaleDateString('ru-RU', {
     day: 'numeric',
@@ -22,43 +21,42 @@ const formatDate = (dateString: string) => {
 
 <template>
   <div
-    class="bg-dark-surface rounded-xl overflow-hidden border border-white/5 shadow-md active:scale-[0.99] transition-transform cursor-pointer group"
+    class="bg-dark-surface group cursor-pointer overflow-hidden rounded-xl border border-white/5 shadow-md transition-transform active:scale-[0.99]"
     @click="$emit('click')"
   >
     <!-- Картинка (если есть) -->
-    <div v-if="coverUrl" class="h-40 w-full overflow-hidden relative">
+    <div v-if="coverUrl" class="relative h-40 w-full overflow-hidden">
       <img
         :src="coverUrl"
         alt="Cover"
-        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+        class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
       />
       <div
-        class="absolute inset-0 bg-gradient-to-t from-dark-surface to-transparent opacity-60"
+        class="from-dark-surface absolute inset-0 bg-gradient-to-t to-transparent opacity-60"
       ></div>
     </div>
 
     <!-- Заглушка, если картинки нет -->
     <div
       v-else
-      class="h-24 bg-dark-surface border-b border-white/5 flex items-center justify-center"
+      class="bg-dark-surface flex h-24 items-center justify-center border-b border-white/5"
     >
       <span class="text-4xl">📁</span>
     </div>
 
     <!-- Контент -->
     <div class="p-4">
-      <h3 class="text-lg font-bold text-dark-text leading-tight mb-2">{{ title }}</h3>
+      <h3 class="text-dark-text mb-2 text-lg leading-tight font-bold">{{ title }}</h3>
 
       <!-- Цена (Акцент) -->
-      <p v-if="totalCost" class="text-primary font-semibold mb-3">
+      <p v-if="totalCost" class="text-primary mb-3 font-semibold">
         {{ Number(totalCost).toLocaleString('ru-RU') }} ₽
       </p>
 
       <!-- Подвал карточки (Дата и люди) -->
-      <div
-        class="flex items-center justify-between text-xs text-dark-muted mt-2 border-t border-white/5 pt-3"
-      >
+      <div class="text-dark-muted mt-2 flex flex-col border-t border-white/5 pt-3 text-xs">
         <span>Обновлено: {{ formatDate(updatedAt) }}</span>
+        <span>Кем обновлено: {{ updated_by_name }}</span>
 
         <!-- Индикатор участников -->
         <div v-if="participantsCount" class="flex items-center gap-1">

@@ -4,10 +4,9 @@ export interface Project {
   title: string
 
   description?: string
-  documents?: string
+  document_url?: string
   address?: string
 
-  // ImageField возвращает полный URL или null
   cover_image?: string | null
 
   // URLField

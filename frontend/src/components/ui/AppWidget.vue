@@ -4,7 +4,6 @@ defineProps<{
   icon?: string
   badge?: string | number
   clickable?: boolean
-  // Добавляем новый проп для внешней ссылки
   externalLink?: string
 }>()
 </script>
