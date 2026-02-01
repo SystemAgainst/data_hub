@@ -8,6 +8,12 @@ export const useProjectsStore = defineStore('projects', () => {
   const isLoading = ref(false)
   const error = ref<string | null>(null)
 
+  const resetStore = () => {
+    projects.value = []
+    error.value = null
+    isLoading.value = false
+  }
+
   // Функция загрузки (Action)
   const fetchProjects = async () => {
     // Если уже загружали и прошло мало времени - можно не грузить (кеш),
@@ -21,6 +27,8 @@ export const useProjectsStore = defineStore('projects', () => {
     } catch (err) {
       console.error('Ошибка загрузки:', err)
       error.value = 'Не удалось загрузить проекты'
+      // Важно: если ошибка, можно тоже очистить старые данные, чтобы не вводить в заблуждение
+      projects.value = []
     } finally {
       isLoading.value = false
     }
@@ -31,5 +39,6 @@ export const useProjectsStore = defineStore('projects', () => {
     isLoading,
     error,
     fetchProjects,
+    resetStore,
   }
 })

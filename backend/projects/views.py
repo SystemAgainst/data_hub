@@ -1,4 +1,5 @@
 from rest_framework import viewsets
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.models import Token
 
 # Добавьте эти импорты для логина:
@@ -45,15 +46,33 @@ class ProjectViewSet(viewsets.ModelViewSet):
     """
 
     queryset = Project.objects.all()
+
     serializer_class = ProjectSerializer
-    # Опционально: Можно переопределить get_serializer_class,
-    # чтобы Гостям отдавать "урезанный" JSON (без цены и ссылок),
-    # а Своим - полный. Это best practice для безопасности.
     permission_classes = [IsProjectParticipantOrAdmin]
+
+    authentication_classes = [TokenAuthentication]
+
+    def get_queryset(self):
+        user = self.request.user
+        print(
+            f"DEBUG: User: {user.username}, Is Super: {user.is_superuser}, Is Staff: {user.is_staff}"
+        )
+        if not user.is_authenticated:
+            return Project.objects.none()
+
+        # Оставляем доступ ко всем проектам ТОЛЬКО Суперпользователю (admin)
+        if user.is_superuser:
+            return Project.objects.all()
+
+        # Для всех остальных — только их проекты
+        return Project.objects.filter(participants=user)
 
     @action(detail=True, methods=["get"])
     def stats(self, request, pk=None):
+        # ... (ваш код stats остается без изменений)
         project = self.get_object()
+        # get_object сам вызовет get_queryset, так что проверка прав сработает и тут
+
         if not project.google_sheet_url:
             return Response({"error": "No Google Sheet linked"}, status=400)
 

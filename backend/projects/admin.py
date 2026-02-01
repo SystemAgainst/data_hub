@@ -10,6 +10,16 @@ class ProjectAdmin(admin.ModelAdmin):
     list_filter = ("updated_at", "participants")
     search_fields = ("title", "description")
 
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+
+        # Если это Суперпользователь — показываем всё
+        if request.user.is_superuser:
+            return qs
+
+        # Иначе (даже если это Staff/Zoro) — только то, где он участник
+        return qs.filter(participants=request.user)
+
     # Автоматически подставлять текущего пользователя в поле "Кем обновлено"
     def save_model(self, request, obj, form, change):
         if not change or not obj.updated_by:  # Если создаем или поле пустое

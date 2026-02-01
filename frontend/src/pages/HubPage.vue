@@ -2,11 +2,14 @@
 import { useRouter } from 'vue-router'
 import MenuButton from '@/components/ui/MenuButton.vue'
 import { tokenName } from '@/api/http'
+import { useProjectsStore } from '@/stores/projects'
 
+const projectsStore = useProjectsStore()
 const router = useRouter()
 
 const logout = () => {
   localStorage.removeItem(tokenName)
+  projectsStore.resetStore()
   router.push({ name: 'auth' })
 }
 
@@ -37,6 +40,6 @@ const goTo = (route: string) => {
     <!-- Кнопка 3: Финансы (Заглушка) -->
     <MenuButton title="Сколько денег" subtitle="В разработке" :disabled="true" />
 
-    <button @click="logout" class="bg-red-500 px-4 py-2 rounded mt-4 cursor-pointer">Выйти</button>
+    <button @click="logout" class="mt-4 cursor-pointer rounded bg-red-500 px-4 py-2">Выйти</button>
   </div>
 </template>
