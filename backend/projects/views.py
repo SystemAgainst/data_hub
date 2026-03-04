@@ -1,15 +1,15 @@
-from rest_framework import viewsets
+from django.db.models import Max, Min, Sum
+from django.shortcuts import get_object_or_404
+from rest_framework import permissions, viewsets
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.models import Token
-
-# Добавьте эти импорты для логина:
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from .models import Project
+from .models import Project, ProjectExpense
 from .permissions import IsProjectParticipantOrAdmin
-from .serializers import ProjectSerializer
+from .serializers import ProjectExpenseSerializer, ProjectSerializer
 from .services import get_sheet_stats
 
 
@@ -81,3 +81,60 @@ class ProjectViewSet(viewsets.ModelViewSet):
             return Response({"error": "Failed to fetch data"}, status=502)
 
         return Response(data)
+
+
+class ProjectExpenseViewSet(viewsets.ModelViewSet):
+    serializer_class = ProjectExpenseSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        # Базовая фильтрация таблицы по ID проекта (будем передавать с фронта /api/expenses/?project_id=1)
+        project_id = self.request.query_params.get("project_id")
+        if project_id:
+            return ProjectExpense.objects.filter(project_id=project_id)
+        return ProjectExpense.objects.all()
+
+    @action(detail=False, methods=["get"])
+    def summary(self, request):
+        """
+        Ручка для виджетов под таблицей (заменяет старую логику Google Sheets)
+        """
+        project_id = request.query_params.get("project_id")
+        project = get_object_or_404(Project, id=project_id)
+
+        expenses = ProjectExpense.objects.filter(project_id=project_id)
+
+        # 1. Считаем всего потрачено и ищем последнюю дату записи
+        totals = expenses.aggregate(
+            total_spent=Sum("amount"), max_date=Max("date"), min_date=Min("date")
+        )
+
+        total_spent = totals["total_spent"] or 0
+
+        # 2. Высчитываем всего дней
+        total_days = 0
+        if totals["max_date"]:
+            start_date = project.created_at.date()
+            total_days = (totals["max_date"] - start_date).days
+
+        # 3. Затраты исполнителя (группировка по юзерам)
+        participants_stats = (
+            expenses.values("executor__username", "executor__first_name")
+            .annotate(total_amount=Sum("amount"))
+            .order_by("-total_amount")
+        )
+
+        return Response(
+            {
+                "total_spent": total_spent,
+                "total_days": total_days,
+                "participants": [
+                    {
+                        "name": stat["executor__first_name"]
+                        or stat["executor__username"],
+                        "amount": stat["total_amount"],
+                    }
+                    for stat in participants_stats
+                ],
+            }
+        )

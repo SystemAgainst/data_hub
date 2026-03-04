@@ -18,8 +18,8 @@ defineEmits(['edit'])
     </div>
     <button
       @click="$emit('edit')"
-      class="flex items-center justify-center rounded-lg bg-white/5 p-2 text-white transition-colors hover:bg-white/10 sm:px-4 sm:py-2"
-      aria-label="Редактировать"
+      class="flex cursor-pointer items-center justify-center rounded-lg bg-white/5 p-2 text-white transition-colors hover:bg-white/10 sm:px-4 sm:py-2"
+      aria-label="Таблица"
     >
       <!-- Иконка (видима всегда, или скрываем на desktop если хотите текст+иконка) -->
       <svg
@@ -39,7 +39,7 @@ defineEmits(['edit'])
       </svg>
 
       <!-- Текст (скрыт на мобильных 'hidden', виден от sm 'sm:inline') -->
-      <span class="hidden text-sm font-medium sm:inline">Редактировать</span>
+      <span class="hidden text-sm font-medium sm:inline">Таблица</span>
     </button>
   </div>
 </template>

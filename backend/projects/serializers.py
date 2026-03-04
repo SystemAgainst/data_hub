@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from .models import Project
+from .models import Project, ProjectExpense
 
 
 class UserMiniSerializer(serializers.ModelSerializer):
@@ -44,3 +44,20 @@ class ProjectSerializer(serializers.ModelSerializer):
         if user.is_authenticated:
             instance.updated_by = user
         return super().update(instance, validated_data)
+
+
+class ProjectExpenseSerializer(serializers.ModelSerializer):
+    # Добавляем текстовое имя исполнителя для вывода на фронте (в зависимости от того, что используете: username или first_name)
+    executor_name = serializers.CharField(source="executor.username", read_only=True)
+
+    class Meta:
+        model = ProjectExpense
+        fields = [
+            "id",
+            "project",
+            "amount",
+            "comment",
+            "date",
+            "executor",
+            "executor_name",
+        ]

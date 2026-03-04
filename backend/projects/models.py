@@ -44,3 +44,33 @@ class Project(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class ProjectExpense(models.Model):
+    project = models.ForeignKey(
+        Project,
+        on_delete=models.CASCADE,
+        related_name="expenses",
+        verbose_name="Проект",
+    )
+    amount = models.DecimalField(max_digits=12, decimal_places=2, verbose_name="Сумма")
+    comment = models.CharField(max_length=500, blank=True, verbose_name="Комментарий")
+    date = models.DateField(verbose_name="Дата")
+    executor = models.ForeignKey(
+        User,
+        on_delete=models.PROTECT,  # Запрещаем удалять юзера, если есть его траты
+        related_name="project_expenses",
+        verbose_name="Исполнитель",
+    )
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Создано")
+
+    class Meta:
+        verbose_name = "Запись расхода"
+        verbose_name_plural = "Записи расходов"
+        ordering = [
+            "date",
+            "created_at",
+        ]  # Сортировка по дате, затем по времени создания
+
+    def __str__(self):
+        return f"{self.project.title} - {self.amount} ₽"
