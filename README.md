@@ -1,81 +1,36 @@
-# Data Hub (ИС для ИП)
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-Информационная система (веб-хаб) для централизации бизнес-процессов.
-Включает парсеры недвижимости, управление проектами и финансовый учет.
+## Getting Started
 
-## 🛠 Технологический стек
-
-- **Backend:** Python 3.11, Django 5, DRF
-- **Frontend:** Vue 3, TailwindCSS, Pinia (в разработке)
-- **Database:** PostgreSQL 15
-- **Infra:** Docker, Docker Compose
-
-## 🚀 Как развернуть проект локально
-
-### Предварительные требования
-- Установленный [Docker Desktop](https://www.docker.com/products/docker-desktop/)
-- Git
-
-### 1. Клонирование репозитория
-```bash
-git clone https://github.com/SystemAgainst/data_hub
-cd data_hub
-```
-
-### 2. Настройка переменных окружения
-В проекте есть файл-пример с настройками. Скопируйте его, чтобы создать свой файл конфигурации:
+First, run the development server:
 
 ```bash
-# Windows (PowerShell)
-copy .env.example .env
-
-# Mac / Linux
-cp .env.example .env
-```
-*Примечание: Стандартные настройки в `.env` уже подходят для локального запуска.*
-
-### 3. Запуск через Docker
-Запустите сборку и старт контейнеров:
-
-```bash
-docker-compose up --build
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
 ```
 
-После успешного запуска (когда в консоли перестанут бежать строки):
-- **Бэкенд:** доступен по адресу [http://localhost:8000](http://localhost:8000)
-- **Админка Django:** [http://localhost:8000/admin](http://localhost:8000/admin)
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-### 4. Создание суперпользователя (для входа в админку)
-Пере созданием суперпользователя, необходимо выполнить миграции:
-```bash
-docker-compose exec backend python manage.py migrate
-```
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-В новом окне терминала выполните команду:
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-```bash
-docker-compose exec backend python manage.py createsuperuser
-```
-Следуйте инструкциям (введите логин и пароль).
+## Learn More
 
----
+To learn more about Next.js, take a look at the following resources:
 
-## 🛠 Полезные команды
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-**Остановить проект:**
-Нажмите `Ctrl+C` в терминале, где запущен проект.
-Или выполните:
-```bash
-docker-compose down
-```
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-**Применить новые миграции (если изменили модели):**
-```bash
-docker-compose exec backend python manage.py migrate
-```
+## Deploy on Vercel
 
-**Пересобрать контейнер (если добавили новые библиотеки в requirements.txt):**
-```bash
-docker-compose up --build
-```
-```
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
